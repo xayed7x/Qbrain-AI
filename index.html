@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" class="">
-  <!-- Start without 'dark' class, JS will add it -->
+<html lang="en" class="dark">
+  <!-- Start with 'dark' class for default dark mode -->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -1124,7 +1124,8 @@
         let isDarkMode =
           localStorage.getItem("theme") === "dark" ||
           (!("theme" in localStorage) &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches);
+            // Default to dark mode if no preference is set
+            true);
         applyTheme(isDarkMode);
         themeToggleBtns.forEach((btn) => {
           btn?.addEventListener("click", function () {
