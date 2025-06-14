@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QBrain AI - Your Personal Study Assistant for SSC Success</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="animation-style.css" />
     <link rel="icon" href="logo.jpg" type="image/jpeg" />
     <!-- Replace with your actual logo file -->
     <style>
@@ -486,6 +488,7 @@
         <div class="max-w-2xl mx-auto">
           <div class="flex rounded-lg overflow-hidden shadow-2xl">
             <input
+              id="main-ask-input"
               type="text"
               placeholder="Ask your question in Bangla or English. (UPCOMING...)"
               class="w-full px-5 py-4 focus:outline-none placeholder-gray-500 text-base text-gray-800 bg-white"
@@ -1052,8 +1055,10 @@
             <ul class="space-y-3 text-sm">
               <li class="flex items-center">
                 <i class="fas fa-envelope mr-2.5 text-main-secondary"></i
-                ><a href="mailto:support@qbrain.ai" class="transition-colors"
-                  >support@qbrain.ai</a
+                ><a
+                  href="mailto:zayed.b.hamid@gmail.com"
+                  class="transition-colors"
+                  >zayed.b.hamid@gmail.com</a
                 >
               </li>
               <li class="flex items-center">
@@ -1256,5 +1261,17 @@
         setTimeout(handleScrollAnimation, 50); // Initial check
       });
     </script>
+    <!-- ...existing code... -->
+
+    <!-- Animation Overlay (for transition from index.html to chat.html) -->
+    <div id="qbrain-transition-overlay">
+      <div id="animation-gate">
+        <div class="gate-door" id="left-door"></div>
+        <div class="gate-door" id="right-door"></div>
+        <div id="light-beam-effect"></div>
+      </div>
+      <!-- Note: The #chatbot-fullscreen-container is NOT needed here, it's on chat.html -->
+    </div>
+    <script src="animation-script.js"></script>
   </body>
 </html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <!-- Start with dark class -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QBrain AI - Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- If using Tailwind utilities here -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link rel="stylesheet" href="chat-style.css" />
+    <link rel="icon" href="logo.jpg" type="image/jpeg" />
+    <script>
+      // If using Tailwind utilities in chat.html, include the config
+      // Otherwise, if chat-style.css is pure custom CSS, this block might not be needed
+      // For consistency, let's assume some Tailwind might be used.
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "brand-blue": "var(--brand-blue)", // Ensure these are defined in chat-style.css :root
+              "brand-purple": "var(--brand-purple)",
+              "brand-yellow": "var(--brand-yellow)",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="antialiased">
+    <!-- Chat Entry Loader (for direct access to chat.html) -->
+    <div id="chat-entry-loader">
+      <img src="logo.jpg" alt="QBrain Logo" id="loader-logo" />
+      <!-- Gradient text for loader title -->
+      <h1
+        id="loader-title"
+        class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
+      >
+        QBrain AI
+      </h1>
+      <p id="loader-subtitle">Preparing your session...</p>
+    </div>
+
+    <!-- Main Chat UI (Initially hidden by loader or CSS) -->
+    <div id="chatbot-fullscreen-container">
+      <header id="chatbot-header">
+        <!-- Gradient text for QBrain AI title -->
+        <h1
+          class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
+        >
+          QBrain AI
+        </h1>
+        <button id="close-chatbot-btn" title="Exit Chat (Go to Homepage)">
+          <i class="fas fa-times"></i>
+        </button>
+      </header>
+      <div id="chatbot-messages">
+        <!-- Example Message -->
+        <div class="message bot-message">
+          <p>Hello! How can I help you with your SSC preparation today?</p>
+        </div>
+        <!-- More messages will be appended here by JS -->
+      </div>
+      <div id="chatbot-input-area">
+        <input
+          type="text"
+          id="chatbot-user-input"
+          placeholder="Ask QBrain anything..."
+        />
+        <button id="chatbot-send-btn" title="Send Message">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+
+    <script src="chat-entry-script.js"></script>
+  </body>
+</html>

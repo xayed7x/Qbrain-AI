@@ -1,0 +1,67 @@
+/* animation-style.css */
+body.qbrain-transition-active {
+  overflow: hidden; /* Prevent scroll during fullscreen animation */
+}
+
+#qbrain-transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000; /* Deep black background for the overlay */
+  z-index: 10000; /* Higher than nav's z-index (50) and chat popup (60) */
+  display: none; /* Initially hidden */
+  opacity: 0;
+  overflow: hidden;
+}
+
+#animation-gate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.gate-door {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50.5%; /* Slight overlap */
+  background-color: #030303; /* Very dark, almost black for doors */
+  z-index: 20;
+}
+
+#left-door {
+  left: 0;
+}
+
+#right-door {
+  right: 0;
+}
+
+#light-beam-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Pure white light only - from your provided final preview */
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.95) 30%,
+    rgba(255, 255, 255, 0.7) 60%,
+    transparent 80%
+  );
+  transform: scale(0.05);
+  opacity: 0;
+  z-index: 10;
+  /* Pure white bloom - from your provided final preview */
+  box-shadow: 0 0 80px 40px rgba(255, 255, 255, 0.7),
+    0 0 160px 80px rgba(255, 255, 255, 0.25),
+    0 0 240px 120px rgba(255, 255, 255, 0.08);
+  transform-origin: center center;
+}
