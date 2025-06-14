@@ -1,4 +1,11 @@
 /* chat-style.css */
+
+/* THIS IS THE SECONDARY FIX */
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 /* Import Poppins font (if not relying on Tailwind's default sans-serif) */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 
@@ -18,7 +25,7 @@
   --brand-yellow: #f59e0b;
   --grad-from-blue: #3b82f6;
   --grad-to-purple: #8b5cf6;
-  /* Add other necessary variables if not covered by Tailwind */
+  --brand-blue-rgb: 59, 130, 246;
 }
 
 .dark {
@@ -30,9 +37,7 @@
   --text-headings: #f9fafb;
   --border-primary: #374151;
   --border-input: #4b5563;
-  /* Dark mode gradient adjustments (using same as light for now as per your original CSS) */
-  /* --grad-from-blue: #60a5fa; */
-  /* --grad-to-purple: #a78bfa; */
+  --brand-blue-rgb: 96, 165, 250;
 }
 
 body {
@@ -45,6 +50,7 @@ body {
   min-height: 100vh;
   overflow: hidden; /* Prevent scrollbars initially */
   transition: background-color 0.3s ease, color 0.3s ease;
+  width: 100%; /* Ensure body also takes full width */
 }
 /* Initial states for loader elements to prevent flash */
 #loader-logo,
@@ -214,12 +220,8 @@ body {
 #chatbot-user-input:focus {
   outline: none;
   border-color: var(--brand-blue); /* Use brand blue for focus */
-  box-shadow: 0 0 0 3px rgba(var(--brand-blue-rgb, 59, 130, 246), 0.3); /* Focus ring with brand blue */
+  box-shadow: 0 0 0 3px rgba(var(--brand-blue-rgb), 0.3); /* Focus ring with brand blue */
 }
-/* For brand-blue-rgb to work in box-shadow, you need to define it:
-.dark { --brand-blue-rgb: 96, 165, 250; } For example
-:root { --brand-blue-rgb: 59, 130, 246; }
-*/
 
 #chatbot-send-btn {
   padding: 12px; /* Square button, adjust padding */

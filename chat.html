@@ -3,10 +3,13 @@
   <!-- Start with dark class -->
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- THIS IS THE CRITICAL FIX -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>QBrain AI - Chat</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- If using Tailwind utilities here -->
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
       rel="stylesheet"
@@ -15,14 +18,11 @@
     <link rel="stylesheet" href="chat-style.css" />
     <link rel="icon" href="logo.jpg" type="image/jpeg" />
     <script>
-      // If using Tailwind utilities in chat.html, include the config
-      // Otherwise, if chat-style.css is pure custom CSS, this block might not be needed
-      // For consistency, let's assume some Tailwind might be used.
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              "brand-blue": "var(--brand-blue)", // Ensure these are defined in chat-style.css :root
+              "brand-blue": "var(--brand-blue)",
               "brand-purple": "var(--brand-purple)",
               "brand-yellow": "var(--brand-yellow)",
             },
@@ -35,7 +35,6 @@
     <!-- Chat Entry Loader (for direct access to chat.html) -->
     <div id="chat-entry-loader">
       <img src="logo.jpg" alt="QBrain Logo" id="loader-logo" />
-      <!-- Gradient text for loader title -->
       <h1
         id="loader-title"
         class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
@@ -48,7 +47,6 @@
     <!-- Main Chat UI (Initially hidden by loader or CSS) -->
     <div id="chatbot-fullscreen-container">
       <header id="chatbot-header">
-        <!-- Gradient text for QBrain AI title -->
         <h1
           class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
         >
