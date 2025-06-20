@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <!-- Start with 'dark' class for default dark mode -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QBrain AI - Your Personal Study Assistant for SSC Success</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="animation-style.css" />
+    <link rel="icon" href="logo.jpg" type="image/jpeg" />
+    <!-- Replace with your actual logo file -->
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
+      :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8fafc;
+        --bg-nav: rgba(255, 255, 255, 0.8);
+        --bg-card: #ffffff;
+        --bg-chat-popup: #ffffff;
+        --text-primary: #1f2937;
+        --text-secondary: #4b5563;
+        --text-headings: #111827;
+        --border-primary: #e5e7eb;
+        --border-input: #d1d5db;
+        --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        --shadow-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        --shadow-popup: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        --icon-bg-feature-ring: rgba(59, 130, 246, 0.1);
+        --hero-qna-container-bg: #f9fafb;
+        --hero-q-card-bg: #fef3c7;
+        --hero-a-card-bg: #f3e8ff;
+        --hero-blob1-bg: rgba(253, 224, 71, 0.5);
+        --hero-blob2-bg: rgba(191, 219, 254, 0.6);
+        --footer-bg: #0f172a;
+        --footer-text: #cbd5e1;
+        --footer-text-secondary: #94a3b8;
+        --footer-border: #334155;
+        --brand-blue: #3b82f6;
+        --brand-purple: #8b5cf6;
+        --brand-yellow: #f59e0b;
+        /* Specific gradient colors for direct use, not for text-clip via variable in CDN setup */
+        --grad-from-blue: #3b82f6;
+        --grad-to-purple: #8b5cf6;
+      }
+
+      .dark {
+        --bg-primary: #111827;
+        --bg-secondary: #1f2937;
+        --bg-nav: rgba(17, 24, 39, 0.7);
+        --bg-card: #1f2937;
+        --bg-chat-popup: #1e293b;
+        --text-primary: #d1d5db;
+        --text-secondary: #9ca3af;
+        --text-headings: #f9fafb;
+        --border-primary: #374151;
+        --border-input: #4b5563;
+        --shadow-card: 0 4px 10px rgba(0, 0, 0, 0.3),
+          0 1px 3px rgba(0, 0, 0, 0.2);
+        --shadow-card-hover: 0 8px 20px rgba(0, 0, 0, 0.4),
+          0 3px 8px rgba(0, 0, 0, 0.3);
+        --shadow-popup: 0 15px 30px rgba(0, 0, 0, 0.5),
+          0 5px 15px rgba(0, 0, 0, 0.4);
+        --icon-bg-feature-ring: rgba(59, 130, 246, 0.2);
+        --hero-qna-container-bg: #1e293b;
+        --hero-q-card-bg: #312e24;
+        --hero-a-card-bg: #2f2737;
+        --hero-blob1-bg: rgba(250, 204, 21, 0.3);
+        --hero-blob2-bg: rgba(96, 165, 250, 0.3);
+        --footer-bg: #020617;
+        --footer-text: #94a3b8;
+        --footer-text-secondary: #64748b;
+        --footer-border: #1e293b;
+        /* Dark mode gradient adjustments if needed */
+        /* --grad-from-blue: #60a5fa; */
+        /* --grad-to-purple: #a78bfa; */
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        scroll-behavior: smooth;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      .scroll-animate {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      }
+      .scroll-animate.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .chat-container {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-out, opacity 0.3s ease-out,
+          transform 0.3s ease-out;
+        transform: translateY(20px);
+      }
+      .chat-container.open {
+        max-height: 600px;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      nav {
+        background-color: var(--bg-nav);
+        border-color: var(--border-primary);
+      }
+      nav a:not(.brand-button),
+      #mobile-menu a {
+        color: var(--text-secondary);
+      } /* Exclude Ask button */
+      nav a:not(.brand-button):hover,
+      #mobile-menu a:hover {
+        color: var(--brand-blue);
+      }
+      #mobile-menu {
+        background-color: var(--bg-primary);
+        border-color: var(--border-primary);
+      }
+      #mobile-menu a:hover {
+        background-color: var(--bg-secondary);
+      }
+      .text-main-headings {
+        color: var(--text-headings);
+      }
+      .text-main-secondary {
+        color: var(--text-secondary);
+      }
+      .card-like {
+        background-color: var(--bg-card);
+        box-shadow: var(--shadow-card);
+      }
+      .card-like:hover {
+        box-shadow: var(--shadow-card-hover);
+      }
+      .popup-like {
+        background-color: var(--bg-chat-popup);
+        box-shadow: var(--shadow-popup);
+        border-color: var(--border-primary);
+      }
+      .input-like {
+        border-color: var(--border-input);
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+      }
+      .input-like::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+      .input-like:focus {
+        --tw-ring-color: var(--brand-blue);
+        border-color: transparent;
+      }
+      .section-bg-alt {
+        background-color: var(--bg-secondary);
+      }
+      .hero-qna-container {
+        background-color: var(--hero-qna-container-bg);
+        box-shadow: var(--shadow-popup);
+      }
+      .hero-q-card {
+        background-color: var(--hero-q-card-bg);
+      }
+      .hero-a-card {
+        background-color: var(--hero-a-card-bg);
+      }
+      .hero-blob1 {
+        background-color: var(--hero-blob1-bg);
+      }
+      .hero-blob2 {
+        background-color: var(--hero-blob2-bg);
+      }
+      .feature-icon-ring {
+        box-shadow: 0 0 0 4px var(--icon-bg-feature-ring);
+      }
+      footer {
+        background-color: var(--footer-bg);
+        color: var(--footer-text);
+      }
+      footer h3.text-main-headings {
+        color: var(--text-headings);
+      } /* Ensure footer h3 also uses text-headings for dark mode */
+      footer a {
+        color: var(--footer-text-secondary);
+      }
+      footer a:hover {
+        color: white;
+      }
+      footer .border-t {
+        border-color: var(--footer-border);
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "brand-blue": "var(--brand-blue)",
+              "brand-purple": "var(--brand-purple)",
+              "brand-yellow": "var(--brand-yellow)",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="antialiased">
+    <!-- Navigation -->
+    <nav class="backdrop-blur-md shadow-md sticky top-0 z-50">
+      <div
+        class="container mx-auto px-4 py-3.5 flex justify-between items-center"
+      >
+        <a href="#" class="flex items-center space-x-2">
+          <img
+            src="logo.jpg"
+            alt="QBrain AI Logo"
+            class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg"
+          />
+          <!-- Gradient text for logo name -->
+          <span
+            class="font-bold text-xl sm:text-2xl bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
+            >QBrain AI</span
+          >
+        </a>
+        <div class="hidden md:flex items-center space-x-1 lg:space-x-3">
+          <a
+            href="#features"
+            class="font-medium transition-colors px-3 py-2 rounded-md hover:bg-opacity-10"
+            >Features</a
+          >
+          <a
+            href="#how-it-works"
+            class="font-medium transition-colors px-3 py-2 rounded-md hover:bg-opacity-10"
+            >How It Works</a
+          >
+          <a
+            href="#testimonials"
+            class="font-medium transition-colors px-3 py-2 rounded-md hover:bg-opacity-10"
+            >Testimonials</a
+          >
+          <button
+            id="theme-toggle"
+            type="button"
+            class="ml-3 text-main-secondary focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <i
+              id="theme-toggle-dark-icon"
+              class="fas fa-moon w-5 h-5 hidden"
+            ></i>
+            <i
+              id="theme-toggle-light-icon"
+              class="fas fa-sun w-5 h-5 hidden"
+            ></i>
+          </button>
+          <button
+            id="nav-ask-button"
+            class="brand-button ml-2 bg-gradient-to-r from-brand-blue to-brand-purple hover:from-blue-700 hover:to-purple-700 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow hover:shadow-md text-sm"
+          >
+            Ask a Question
+          </button>
+        </div>
+        <div class="md:hidden flex items-center">
+          <button
+            id="theme-toggle-mobile"
+            type="button"
+            class="text-main-secondary focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2 mr-2 inline-flex items-center hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <i
+              id="theme-toggle-dark-icon-mobile"
+              class="fas fa-moon w-4 h-4 hidden"
+            ></i>
+            <i
+              id="theme-toggle-light-icon-mobile"
+              class="fas fa-sun w-4 h-4 hidden"
+            ></i>
+          </button>
+          <button
+            id="mobile-ask-button"
+            class="bg-gradient-to-r from-brand-blue to-brand-purple text-white px-3 py-1.5 rounded-md font-medium text-xs mr-2"
+          >
+            Ask
+          </button>
+          <button
+            id="mobile-menu-button"
+            class="text-main-secondary hover:text-brand-blue focus:outline-none"
+          >
+            <i class="fas fa-bars text-2xl"></i>
+          </button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden shadow-lg border-t">
+        <div class="px-4 py-3 space-y-2">
+          <a
+            href="#features"
+            class="block font-medium rounded-md px-3 py-2 transition-colors"
+            >Features</a
+          >
+          <a
+            href="#how-it-works"
+            class="block font-medium rounded-md px-3 py-2 transition-colors"
+            >How It Works</a
+          >
+          <a
+            href="#testimonials"
+            class="block font-medium rounded-md px-3 py-2 transition-colors"
+            >Testimonials</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Chat Interface (Collapsible) -->
+    <div
+      id="chat-interface"
+      class="chat-container fixed bottom-4 right-4 z-[60] w-[calc(100%-2rem)] max-w-md rounded-xl border popup-like"
+    >
+      <div
+        class="px-5 py-4 bg-gradient-to-r from-brand-blue to-brand-purple text-white rounded-t-xl flex justify-between items-center"
+      >
+        <h3 class="font-bold text-lg">Ask QBrain AI</h3>
+        <!-- Keep white for gradient header -->
+        <button id="close-chat" class="text-white opacity-70 hover:opacity-100">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div
+        class="p-4 h-80 overflow-y-auto scroll-smooth"
+        id="chat-messages-container"
+        style="background-color: var(--bg-secondary)"
+      >
+        <div class="mb-3 flex">
+          <div
+            class="rounded-lg py-2 px-3.5 max-w-[85%] text-sm shadow"
+            style="background-color: var(--bg-card); color: var(--text-primary)"
+          >
+            <p>
+              Hi there! I'm QBrain AI. How can I help with your studies today?
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 border-t" style="border-color: var(--border-primary)">
+        <div class="flex items-center gap-2">
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Type your question..."
+            class="flex-grow px-4 py-2.5 text-sm rounded-lg focus:outline-none focus:ring-2 input-like"
+          />
+          <button
+            id="send-message"
+            class="bg-brand-blue hover:bg-blue-700 text-white p-2.5 rounded-lg transition-colors aspect-square"
+          >
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+        <div
+          class="mt-2 text-xs flex justify-between items-center text-main-secondary"
+        >
+          <span>Supports English & বাংলা</span>
+          <span class="flex items-center"
+            ><i class="fas fa-lock text-xs mr-1"></i> Private & Secure</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header
+      id="hero"
+      class="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden"
+      style="background-color: var(--bg-primary)"
+    >
+      <div
+        class="container mx-auto px-4 grid md:grid-cols-2 gap-10 md:gap-12 items-center"
+      >
+        <div class="text-center md:text-left scroll-animate">
+          <h1
+            class="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold mb-5 leading-tight text-main-headings"
+          >
+            Your Personal Study Assistant for SSC
+            <!-- Gradient text for Success -->
+            <span
+              class="block bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
+              >Success</span
+            >
+          </h1>
+          <p class="text-lg md:text-xl mb-10 text-main-secondary">
+            Ask questions, get smart answers — powered by AI trained on your
+            syllabus.
+          </p>
+          <div
+            class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
+          >
+            <button
+              id="hero-ask-button"
+              class="px-8 py-3.5 bg-gradient-to-r from-brand-blue to-brand-purple hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 text-base md:text-lg"
+            >
+              Ask a Question Now
+            </button>
+            <a
+              href="#how-it-works"
+              class="px-8 py-3.5 bg-transparent border-2 border-brand-blue text-brand-blue font-semibold rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all text-base md:text-lg"
+            >
+              How It Works
+            </a>
+          </div>
+        </div>
+        <div
+          class="relative mt-12 md:mt-0 scroll-animate"
+          style="transition-delay: 0.2s"
+        >
+          <div
+            class="bg-blue-100 rounded-xl p-5 sm:p-6 transform md:hover:scale-105 transition-transform duration-300 md:rotate-1 hero-qna-container"
+          >
+            <div class="rounded-lg p-4 shadow-md mb-4 hero-q-card">
+              <div class="flex items-start space-x-3">
+                <div
+                  class="bg-brand-blue text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-sm font-bold"
+                >
+                  Q
+                </div>
+                <p class="text-sm sm:text-base text-main-primary">
+                  মানুষের অর্থনৈতিক কার্যাবলি কাকে বলে? উদাহরণ দাও।
+                </p>
+              </div>
+            </div>
+            <div class="rounded-lg p-4 shadow-md hero-a-card">
+              <div class="flex items-start space-x-3">
+                <div
+                  class="bg-brand-purple text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-sm font-bold"
+                >
+                  A
+                </div>
+                <div>
+                  <p class="mb-2 text-sm sm:text-base text-main-primary">
+                    মানুষের অর্থনৈতিক কার্যাবলি হল সেই সমস্ত কার্যকলাপ যা অর্থ
+                    উপার্জন বা সম্পদ সৃষ্টির জন্য করা হয়।
+                  </p>
+                  <p class="text-xs sm:text-sm font-medium text-main-secondary">
+                    উদাহরণ:
+                  </p>
+                  <ul
+                    class="list-disc ml-5 text-xs sm:text-sm space-y-0.5 text-main-secondary"
+                  >
+                    <li>কৃষিকাজ</li>
+                    <li>শিল্প উৎপাদন</li>
+                    <li>সেবামূলক কাজ</li>
+                    <li>ব্যবসা বাণিজ্য</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="absolute -top-10 -right-10 w-36 h-36 sm:w-44 sm:h-44 rounded-full -z-10 blur-sm hero-blob1"
+          ></div>
+          <div
+            class="absolute -bottom-8 -left-8 w-28 h-28 rounded-full -z-10 blur-sm hero-blob2"
+          ></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Question Interface Section -->
+    <section
+      id="ask-section"
+      class="bg-gradient-to-r from-brand-blue to-brand-purple py-16 text-white scroll-animate"
+    >
+      <!-- Added scroll-animate -->
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-8 text-white">
+          <!-- Text white for gradient bg -->
+          Get Answers to Your SSC Questions
+        </h2>
+        <div class="max-w-2xl mx-auto">
+          <div class="flex rounded-lg overflow-hidden shadow-2xl">
+            <input
+              id="main-ask-input"
+              type="text"
+              placeholder="Ask your question in Bangla or English. (UPCOMING...)"
+              class="w-full px-5 py-4 focus:outline-none placeholder-gray-500 text-base text-gray-800 bg-white"
+            />
+            <button
+              class="bg-brand-yellow hover:bg-yellow-500 px-6 text-gray-800 font-bold transition-colors shrink-0"
+            >
+              <i class="fas fa-search mr-2 hidden sm:inline"></i>Search
+            </button>
+          </div>
+          <!-- Restored Tags -->
+          <div class="mt-6 flex flex-wrap justify-center gap-x-3 gap-y-2">
+            <span
+              class="bg-white/20 hover:bg-white/30 cursor-pointer px-4 py-1.5 rounded-full text-sm font-medium transition-all"
+              >NCTB Textbooks</span
+            >
+            <span
+              class="bg-white/20 hover:bg-white/30 cursor-pointer px-4 py-1.5 rounded-full text-sm font-medium transition-all"
+              >Board Questions</span
+            >
+            <span
+              class="bg-white/20 hover:bg-white/30 cursor-pointer px-4 py-1.5 rounded-full text-sm font-medium transition-all"
+              >Physics</span
+            >
+            <span
+              class="bg-white/20 hover:bg-white/30 cursor-pointer px-4 py-1.5 rounded-full text-sm font-medium transition-all"
+              >Chemistry</span
+            >
+            <span
+              class="bg-white/20 hover:bg-white/30 cursor-pointer px-4 py-1.5 rounded-full text-sm font-medium transition-all"
+              >Biology</span
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 lg:py-24 section-bg-alt scroll-animate">
+      <!-- Added scroll-animate -->
+      <div class="container mx-auto px-4">
+        <h2
+          class="text-3xl md:text-4xl font-bold text-center mb-12 lg:mb-16 text-main-headings"
+        >
+          Key Features
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            class="rounded-xl p-6 transition-shadow duration-300 card-like scroll-animate"
+          >
+            <!-- Child elements can also have scroll-animate for staggered -->
+            <div
+              class="w-14 h-14 rounded-full flex items-center justify-center mb-5 feature-icon-ring"
+              style="
+                background-color: rgba(59, 130, 246, 0.15);
+                color: var(--brand-blue);
+              "
+            >
+              <i class="fas fa-book text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-main-headings">
+              Curriculum-Based Answers
+            </h3>
+            <p class="text-sm leading-relaxed text-main-secondary">
+              Get accurate answers directly from your NCTB textbooks for Classes
+              9, 10, and SSC preparation.
+            </p>
+          </div>
+          <div
+            class="rounded-xl p-6 transition-shadow duration-300 card-like scroll-animate"
+            style="transition-delay: 0.1s"
+          >
+            <div
+              class="w-14 h-14 rounded-full flex items-center justify-center mb-5 feature-icon-ring"
+              style="
+                background-color: rgba(139, 92, 246, 0.15);
+                color: var(--brand-purple);
+              "
+            >
+              <i class="fas fa-file-alt text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-main-headings">
+              Past Paper Solutions
+            </h3>
+            <p class="text-sm leading-relaxed text-main-secondary">
+              Access solutions and explanations from previous years' board exam
+              questions.
+            </p>
+          </div>
+          <div
+            class="rounded-xl p-6 transition-shadow duration-300 card-like scroll-animate"
+            style="transition-delay: 0.2s"
+          >
+            <div
+              class="w-14 h-14 rounded-full flex items-center justify-center mb-5 feature-icon-ring"
+              style="background-color: rgba(16, 185, 129, 0.15); color: #10b981"
+            >
+              <i class="fas fa-bolt text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-main-headings">
+              Instant Explanations
+            </h3>
+            <p class="text-sm leading-relaxed text-main-secondary">
+              Get immediate, easy-to-understand explanations for complex topics.
+            </p>
+          </div>
+          <div
+            class="rounded-xl p-6 transition-shadow duration-300 card-like scroll-animate"
+            style="transition-delay: 0.3s"
+          >
+            <div
+              class="w-14 h-14 rounded-full flex items-center justify-center mb-5 feature-icon-ring"
+              style="background-color: rgba(239, 68, 68, 0.15); color: #ef4444"
+            >
+              <i class="fas fa-tasks text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-main-headings">
+              MCQ & CQ Help
+            </h3>
+            <p class="text-sm leading-relaxed text-main-secondary">
+              Master both Multiple Choice Questions and Creative Questions with
+              specialized guidance.
+            </p>
+          </div>
+          <div
+            class="rounded-xl p-6 transition-shadow duration-300 card-like scroll-animate"
+            style="transition-delay: 0.4s"
+          >
+            <div
+              class="w-14 h-14 rounded-full flex items-center justify-center mb-5 feature-icon-ring"
+              style="
+                background-color: rgba(245, 158, 11, 0.15);
+                color: var(--brand-yellow);
+              "
+            >
+              <i class="fas fa-calendar-alt text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-main-headings">
+              Study Planner
+              <span
+                class="text-xs bg-blue-100 text-brand-blue px-2 py-0.5 rounded-full ml-1 font-medium dark:bg-blue-900 dark:text-blue-300"
+                >Coming Soon</span
+              >
+            </h3>
+            <p class="text-sm leading-relaxed text-main-secondary">
+              Organize your study schedule based on your strengths and
+              weaknesses.
+            </p>
+          </div>
+          <div
+            class="rounded-xl p-6 transition-shadow duration-300 card-like scroll-animate"
+            style="transition-delay: 0.5s"
+          >
+            <div
+              class="w-14 h-14 rounded-full flex items-center justify-center mb-5 feature-icon-ring"
+              style="background-color: rgba(99, 102, 241, 0.15); color: #6366f1"
+            >
+              <i class="fas fa-language text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 text-main-headings">
+              Bilingual Support
+            </h3>
+            <p class="text-sm leading-relaxed text-main-secondary">
+              Ask questions in Bangla or English - our AI understands and
+              responds.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section
+      id="how-it-works"
+      class="py-16 lg:py-24 scroll-animate"
+      style="background-color: var(--bg-primary)"
+    >
+      <!-- Added scroll-animate -->
+      <div class="container mx-auto px-4">
+        <h2
+          class="text-3xl md:text-4xl font-bold text-center mb-12 lg:mb-16 text-main-headings"
+        >
+          How QBrain AI Works
+        </h2>
+        <div class="max-w-4xl mx-auto">
+          <!-- Restored 3-step cards -->
+          <div class="grid md:grid-cols-3 gap-8 mb-12 lg:mb-16">
+            <div
+              class="text-center scroll-animate"
+              style="transition-delay: 0.1s"
+            >
+              <!-- Staggered animation -->
+              <div
+                class="bg-blue-500 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center mx-auto mb-5 text-2xl font-bold ring-4 ring-blue-100 dark:ring-blue-900"
+              >
+                1
+              </div>
+              <h3 class="text-xl font-semibold mb-2 text-main-headings">
+                Ask Your Question
+              </h3>
+              <p class="text-main-secondary text-sm leading-relaxed">
+                Type any curriculum-related question in Bangla or English.
+              </p>
+            </div>
+            <div
+              class="text-center scroll-animate"
+              style="transition-delay: 0.2s"
+            >
+              <div
+                class="bg-purple-500 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center mx-auto mb-5 text-2xl font-bold ring-4 ring-purple-100 dark:ring-purple-900"
+              >
+                2
+              </div>
+              <h3 class="text-xl font-semibold mb-2 text-main-headings">
+                AI Finds Answers
+              </h3>
+              <p class="text-main-secondary text-sm leading-relaxed">
+                Our AI searches through textbooks and past papers to find
+                accurate information.
+              </p>
+            </div>
+            <div
+              class="text-center scroll-animate"
+              style="transition-delay: 0.3s"
+            >
+              <div
+                class="bg-green-500 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center mx-auto mb-5 text-2xl font-bold ring-4 ring-green-100 dark:ring-green-900"
+              >
+                3
+              </div>
+              <h3 class="text-xl font-semibold mb-2 text-main-headings">
+                Get Smart Response
+              </h3>
+              <p class="text-main-secondary text-sm leading-relaxed">
+                Receive detailed, easy-to-understand answers to help you learn
+                effectively.
+              </p>
+            </div>
+          </div>
+          <!-- Restored Our Technology box -->
+          <div
+            class="rounded-xl p-6 sm:p-8 card-like scroll-animate"
+            style="transition-delay: 0.45s"
+          >
+            <h3
+              class="text-2xl font-bold mb-6 text-center sm:text-left text-main-headings"
+            >
+              Our Technology
+            </h3>
+            <p
+              class="mb-8 text-sm sm:text-base leading-relaxed text-center sm:text-left text-main-secondary"
+            >
+              QBrain AI is built with advanced machine learning technology that
+              has been trained on:
+            </p>
+            <div class="grid sm:grid-cols-2 gap-x-8 gap-y-6">
+              <div class="flex items-start space-x-3">
+                <i
+                  class="fas fa-check-circle text-xl text-green-500 mt-1 shrink-0"
+                ></i>
+                <div>
+                  <h4 class="font-semibold text-main-headings mb-1">
+                    NCTB Textbooks
+                  </h4>
+                  <p class="text-sm leading-relaxed text-main-secondary">
+                    Complete Class 9-10 curriculum across all subjects.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <i
+                  class="fas fa-check-circle text-xl text-green-500 mt-1 shrink-0"
+                ></i>
+                <div>
+                  <h4 class="font-semibold text-main-headings mb-1">
+                    SSC Exam Papers
+                  </h4>
+                  <p class="text-sm leading-relaxed text-main-secondary">
+                    Past 10 years of board exam questions and solutions.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <i
+                  class="fas fa-check-circle text-xl text-green-500 mt-1 shrink-0"
+                ></i>
+                <div>
+                  <h4 class="font-semibold text-main-headings mb-1">
+                    Teacher Explanations
+                  </h4>
+                  <p class="text-sm leading-relaxed text-main-secondary">
+                    Expert-verified answers and teaching methodologies.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <i
+                  class="fas fa-check-circle text-xl text-green-500 mt-1 shrink-0"
+                ></i>
+                <div>
+                  <h4 class="font-semibold text-main-headings mb-1">
+                    Bilingual Dataset
+                  </h4>
+                  <p class="text-sm leading-relaxed text-main-secondary">
+                    Content in both Bangla and English for better accessibility.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section
+      id="testimonials"
+      class="py-16 lg:py-24 section-bg-alt scroll-animate"
+    >
+      <!-- Added scroll-animate -->
+      <div class="container mx-auto px-4">
+        <h2
+          class="text-3xl md:text-4xl font-bold text-center mb-12 lg:mb-16 text-main-headings"
+        >
+          What Students Say
+        </h2>
+        <!-- Restored Testimonial cards -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="rounded-xl p-6 relative card-like scroll-animate">
+            <div class="text-yellow-400 mb-4 text-lg">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+            <p class="italic mb-8 text-sm leading-relaxed text-main-secondary">
+              "QBrain AI helped me understand difficult Physics concepts that I
+              was struggling with. Now I'm confident for my board exams!"
+            </p>
+            <div class="flex items-center">
+              <div
+                class="w-11 h-11 rounded-full flex items-center justify-center mr-3 font-bold text-lg"
+                style="
+                  background-color: rgba(59, 130, 246, 0.2);
+                  color: var(--brand-blue);
+                "
+              >
+                R
+              </div>
+              <div>
+                <h4 class="font-semibold text-main-headings">Rahima Akter</h4>
+                <p class="text-xs text-main-secondary">
+                  Class 10 Student, Dhaka
+                </p>
+              </div>
+            </div>
+            <i
+              class="fas fa-quote-right text-6xl absolute top-5 right-5 -z-0"
+              style="color: var(--bg-secondary)"
+            ></i>
+          </div>
+          <div
+            class="rounded-xl p-6 relative card-like scroll-animate"
+            style="transition-delay: 0.1s"
+          >
+            <div class="text-yellow-400 mb-4 text-lg">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+            <p class="italic mb-8 text-sm leading-relaxed text-main-secondary">
+              "I use QBrain AI every day before my exams. The way it explains
+              creative questions has improved my answers a lot!"
+            </p>
+            <div class="flex items-center">
+              <div
+                class="w-11 h-11 rounded-full flex items-center justify-center mr-3 font-bold text-lg"
+                style="
+                  background-color: rgba(16, 185, 129, 0.2);
+                  color: #10b981;
+                "
+              >
+                K
+              </div>
+              <div>
+                <h4 class="font-semibold text-main-headings">Karim Hassan</h4>
+                <p class="text-xs text-main-secondary">
+                  SSC Candidate, Chittagong
+                </p>
+              </div>
+            </div>
+            <i
+              class="fas fa-quote-right text-6xl absolute top-5 right-5 -z-0"
+              style="color: var(--bg-secondary)"
+            ></i>
+          </div>
+          <div
+            class="rounded-xl p-6 relative card-like scroll-animate"
+            style="transition-delay: 0.2s"
+          >
+            <div class="text-yellow-400 mb-4 text-lg">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star-half-alt"></i>
+            </div>
+            <p class="italic mb-8 text-sm leading-relaxed text-main-secondary">
+              "Being able to ask questions in Bangla makes this so useful. It's
+              like having a private tutor available 24/7 to help me with my
+              studies."
+            </p>
+            <div class="flex items-center">
+              <div
+                class="w-11 h-11 rounded-full flex items-center justify-center mr-3 font-bold text-lg"
+                style="
+                  background-color: rgba(139, 92, 246, 0.2);
+                  color: var(--brand-purple);
+                "
+              ></div>
+              <div>
+                <h4 class="font-semibold text-main-headings">Sadia Islam</h4>
+                <p class="text-xs text-main-secondary">
+                  Class 9 Student, Sylhet
+                </p>
+              </div>
+            </div>
+            <i
+              class="fas fa-quote-right text-6xl absolute top-5 right-5 -z-0"
+              style="color: var(--bg-secondary)"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section
+      id="cta"
+      class="py-16 lg:py-20 bg-gradient-to-r from-brand-blue to-brand-purple text-white scroll-animate"
+    >
+      <!-- Added scroll-animate -->
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+          <!-- Text white for gradient -->
+          Ready to Boost Your SSC Preparation?
+        </h2>
+        <p class="text-lg md:text-xl mb-10 max-w-2xl mx-auto opacity-90">
+          <!-- Keep text white or slightly lighter -->
+          Join thousands of students across Bangladesh who are improving their
+          grades with QBrain AI.
+        </p>
+        <button
+          id="cta-ask-button"
+          class="px-10 py-4 font-bold rounded-lg shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 text-lg"
+          style="background-color: #ffffff; color: var(--brand-blue)"
+        >
+          Start Asking Questions Now
+        </button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pt-16 pb-8 scroll-animate">
+      <!-- Added scroll-animate to whole footer -->
+      <div class="container mx-auto px-4">
+        <!-- Restored Footer Columns -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+          <div>
+            <div class="flex items-center space-x-2 mb-5">
+              <img
+                src="logo.jpg"
+                alt="QBrain AI Logo Footer"
+                class="w-10 h-10 rounded-lg"
+              />
+              <span class="font-bold text-2xl text-main-headings"
+                >QBrain AI</span
+              >
+              <!-- Use text-main-headings -->
+            </div>
+            <p class="text-sm mb-4 leading-relaxed text-main-secondary">
+              Your personal AI study assistant for SSC success.
+            </p>
+            <style>
+              /* Enhanced scroll animation for Features section */
+              #features .scroll-animate {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96) rotateX(8deg);
+                filter: blur(6px);
+                transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                  filter 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+              }
+              #features .scroll-animate.is-visible {
+                opacity: 1;
+                transform: none;
+                filter: blur(0);
+              }
+            </style>
+            <div class="flex space-x-4">
+              <a
+                href="https://www.facebook.com/share/1BUdbbKRj1/"
+                aria-label="Facebook"
+                target="_blank"
+                class="transition-colors"
+                ><i class="fab fa-facebook-f text-xl"></i
+              ></a>
+              <a
+                href="https://www.instagram.com/xayed007?igsh=ZDRnNW1zaWx1Y2x6"
+                aria-label="Instagram"
+                target="_blank"
+                class="transition-colors"
+                ><i class="fab fa-instagram text-xl"></i
+              ></a>
+              <a
+                href="https://youtube.com/@zayedofficialbd?si=xQwc9Be6hZbl8uw2"
+                aria-label="YouTube"
+                target="_blank"
+                class="transition-colors"
+                ><i class="fab fa-youtube text-xl"></i
+              ></a>
+              <a
+                href="https://www.linkedin.com/in/zayed-web-developer"
+                aria-label="LinkedIn"
+                target="_blank"
+                class="transition-colors"
+                ><i class="fab fa-linkedin-in text-xl"></i
+              ></a>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg mb-5 text-main-headings">
+              Quick Links
+            </h3>
+            <ul class="space-y-2.5 text-sm">
+              <li><a href="#hero" class="transition-colors">Home</a></li>
+              <li>
+                <a href="#features" class="transition-colors">Features</a>
+              </li>
+              <li>
+                <a href="#how-it-works" class="transition-colors"
+                  >How It Works</a
+                >
+              </li>
+              <li>
+                <a href="#testimonials" class="transition-colors"
+                  >Testimonials</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg mb-5 text-main-headings">
+              Resources
+            </h3>
+            <ul class="space-y-2.5 text-sm">
+              <li><a href="#" class="transition-colors">Study Tips</a></li>
+              <li><a href="#" class="transition-colors">SSC Guide</a></li>
+              <li><a href="#" class="transition-colors">Blog</a></li>
+              <li><a href="#" class="transition-colors">FAQ</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg mb-5 text-main-headings">
+              Contact Us
+            </h3>
+            <ul class="space-y-3 text-sm">
+              <li class="flex items-center">
+                <i class="fas fa-envelope mr-2.5 text-main-secondary"></i
+                ><a href="mailto:zayed.b.hamid@gmail.com" class="transition-colors"
+                  >zayed.b.hamid@gmail.com</a
+                >
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-phone mr-2.5 text-main-secondary"></i
+                ><a href="tel:+8801700000000" class="transition-colors"
+                  >+88 01915969330</a
+                >
+              </li>
+              <li class="flex items-start">
+                <i
+                  class="fas fa-map-marker-alt mr-2.5 mt-1 text-main-secondary"
+                ></i
+                ><span class="text-main-secondary">Khulna, Bangladesh</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="pt-8 mt-8 border-t text-center text-sm"
+          style="color: var(--footer-text-secondary)"
+        >
+          <!-- Use var for text -->
+          <p class="mb-3">
+            Made by Zayed Bin Hamid (Student), for students in Bangladesh
+          </p>
+          <div
+            class="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-6 mb-4"
+          >
+            <a href="#" class="transition-colors">Privacy Policy</a>
+            <a href="#" class="transition-colors">Terms of Service</a>
+            <a href="#" class="transition-colors">Help Center</a>
+          </div>
+          <p>
+            © <span id="current-year"></span> QBrain AI. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Theme toggle
+        const themeToggleBtns = [
+          document.getElementById("theme-toggle"),
+          document.getElementById("theme-toggle-mobile"),
+        ];
+        const darkIcons = [
+          document.getElementById("theme-toggle-dark-icon"),
+          document.getElementById("theme-toggle-dark-icon-mobile"),
+        ];
+        const lightIcons = [
+          document.getElementById("theme-toggle-light-icon"),
+          document.getElementById("theme-toggle-light-icon-mobile"),
+        ];
+        const applyTheme = (isDark) => {
+          if (isDark) {
+            document.documentElement.classList.add("dark");
+            darkIcons.forEach((icon) => icon?.classList.remove("hidden"));
+            lightIcons.forEach((icon) => icon?.classList.add("hidden"));
+            localStorage.setItem("theme", "dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+            darkIcons.forEach((icon) => icon?.classList.add("hidden"));
+            lightIcons.forEach((icon) => icon?.classList.remove("hidden"));
+            localStorage.setItem("theme", "light");
+          }
+        };
+        let isDarkMode =
+          localStorage.getItem("theme") === "dark" ||
+          (!("theme" in localStorage) &&
+            // Default to dark mode if no preference is set
+            true);
+        applyTheme(isDarkMode);
+        themeToggleBtns.forEach((btn) => {
+          btn?.addEventListener("click", function () {
+            isDarkMode = !document.documentElement.classList.contains("dark");
+            applyTheme(isDarkMode);
+          });
+        });
+
+        document.getElementById("current-year").textContent =
+          new Date().getFullYear();
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+        if (mobileMenuButton && mobileMenu) {
+          mobileMenuButton.addEventListener("click", () =>
+            mobileMenu.classList.toggle("hidden")
+          );
+          mobileMenu.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () =>
+              mobileMenu.classList.add("hidden")
+            );
+          });
+        }
+        const chatInterface = document.getElementById("chat-interface");
+        const closeChatButton = document.getElementById("close-chat");
+        const chatInput = document.getElementById("chat-input");
+        const openChatButtons = [
+          document.getElementById("nav-ask-button"),
+          document.getElementById("mobile-ask-button"),
+          document.getElementById("hero-ask-button"),
+          document.getElementById("cta-ask-button"),
+        ];
+        const openChat = () => {
+          if (chatInterface) {
+            chatInterface.classList.add("open");
+            if (chatInput) chatInput.focus();
+          }
+        };
+        const closeChat = () => chatInterface?.classList.remove("open");
+        openChatButtons.forEach((button) =>
+          button?.addEventListener("click", openChat)
+        );
+        closeChatButton?.addEventListener("click", closeChat);
+        const sendMessageButton = document.getElementById("send-message");
+        const chatMessagesContainer = document.getElementById(
+          "chat-messages-container"
+        );
+        if (sendMessageButton && chatInput && chatMessagesContainer) {
+          const addMessageToChat = (text, sender) => {
+            const messageWrapper = document.createElement("div");
+            messageWrapper.className = `mb-3 flex ${
+              sender === "user" ? "justify-end" : "justify-start"
+            }`;
+            const messageBubble = document.createElement("div");
+            messageBubble.className = `rounded-lg py-2 px-3.5 max-w-[85%] text-sm shadow`;
+            if (sender === "user") {
+              messageBubble.style.backgroundColor = "var(--brand-blue)";
+              messageBubble.style.color = "#ffffff";
+            } else {
+              messageBubble.style.backgroundColor = "var(--bg-card)";
+              messageBubble.style.color = "var(--text-primary)";
+            }
+            messageBubble.innerHTML = `<p>${text.replace(/\n/g, "<br>")}</p>`;
+            messageWrapper.appendChild(messageBubble);
+            chatMessagesContainer.appendChild(messageWrapper);
+            chatMessagesContainer.scrollTop =
+              chatMessagesContainer.scrollHeight;
+          };
+          const handleSendMessage = () => {
+            const messageText = chatInput.value.trim();
+            if (messageText === "") return;
+            addMessageToChat(messageText, "user");
+            chatInput.value = "";
+            setTimeout(() => {
+              addMessageToChat(
+                "Thanks for your question! I'm still learning...",
+                "ai"
+              );
+            }, 1200);
+          };
+          sendMessageButton.addEventListener("click", handleSendMessage);
+          chatInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSendMessage();
+            }
+          });
+        }
+
+        const scrollElements = document.querySelectorAll(".scroll-animate");
+        const elementInView = (el, percentageScroll = 100) => {
+          if (!el) return false;
+          const elementTop = el.getBoundingClientRect().top;
+          return (
+            elementTop <=
+            (window.innerHeight || document.documentElement.clientHeight) *
+              (percentageScroll / 100)
+          );
+        };
+        const displayScrollElement = (element) => {
+          if (!element) return;
+          if (!element.classList.contains("is-visible")) {
+            element.classList.add("is-visible");
+          }
+        };
+        let scrollTimeout;
+        const handleScrollAnimation = () => {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            // console.log("Handling scroll animation check (debounced)..."); // DEBUG
+            // let visibleCount = 0; // DEBUG
+            scrollElements.forEach((el) => {
+              // DEBUG specific section
+              // if (el.id === 'features' || el.id === 'how-it-works' || el.id === 'testimonials' || el.tagName.toLowerCase() === 'footer') {
+              //    const rect = el.getBoundingClientRect();
+              //    const viewportHeight = (window.innerHeight || document.documentElement.clientHeight);
+              //    console.log( `${el.id || el.tagName}: top=${rect.top.toFixed(0)}, trigger@${(viewportHeight * 0.85).toFixed(0)}, inView=${elementInView(el, 85)}`);
+              // }
+              if (elementInView(el, 85)) {
+                displayScrollElement(el); /* visibleCount++; */
+              }
+            });
+            // console.log("Visible elements this check:", visibleCount); // DEBUG
+          }, 50); // Reduced debounce for faster check, but 100ms is also fine
+        };
+        window.addEventListener("scroll", handleScrollAnimation, {
+          passive: true,
+        }); // Passive listener for better scroll performance
+        setTimeout(handleScrollAnimation, 50); // Initial check
+      });
+    </script>
+    <!-- ...existing code... -->
+
+    <!-- Animation Overlay (for transition from index.html to chat.html) -->
+    <div id="qbrain-transition-overlay">
+      <div id="animation-gate">
+        <div class="gate-door" id="left-door"></div>
+        <div class="gate-door" id="right-door"></div>
+        <div id="light-beam-effect"></div>
+      </div>
+      <!-- Note: The #chatbot-fullscreen-container is NOT needed here, it's on chat.html -->
+    </div>
+    <script src="animation-script.js"></script>
+  </body>
+</html>
