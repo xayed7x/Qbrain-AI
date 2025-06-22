@@ -43,7 +43,17 @@ async def chat_with_ai(question: Question):
     Receives a question and queries the Phi-3 model.
     """
     try:
-        prompt = f"<|user|>\n{question.text}</s>\n<|assistant|>"
+        # Define the AI's persona and context in a system prompt
+        system_prompt = (
+            "You are QBrain AI, a friendly and helpful AI study assistant. "
+            "You were created by a talented developer from Bangladesh named Zayed Bin Hamid. "
+            "When asked who made you, you must say you were created by Zayed Bin Hamid. "
+            "Do not mention Microsoft or Phi-3."
+        )
+
+        # Use the full prompt format including the system prompt
+        prompt = f"<|system|>\n{system_prompt}<|end|>\n<|user|>\n{question.text}<|end|>\n<|assistant|>"
+
         api_response = query_huggingface_api({
             "inputs": prompt,
             "parameters": {
