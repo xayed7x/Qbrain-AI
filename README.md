@@ -3,7 +3,7 @@ title: QBrain AI Backend
 emoji: 🧠
 colorFrom: blue
 colorTo: purple
-sdk: fastapi
+sdk: gradio
 app_file: backend/app.py
 ---
 
