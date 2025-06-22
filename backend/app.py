@@ -72,3 +72,13 @@ async def chat_with_ai(question: Question):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         return {"answer": "An unexpected error occurred. Please contact support."}
+    
+
+    # --- Add this block at the very end of the file ---
+# This makes the app runnable when executed directly
+if __name__ == "__main__":
+    import uvicorn
+
+    # Run the FastAPI app with uvicorn
+    # The host and port are set to what Hugging Face Spaces expects
+    uvicorn.run("app:app", host="0.0.0.0", port=7860, reload=False)
