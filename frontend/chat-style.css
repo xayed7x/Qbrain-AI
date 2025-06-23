@@ -1,4 +1,4 @@
-/* chat-style.css (The Definitive CSS Grid Layout) */
+/* chat-style.css (The Definitive CSS Grid Layout - Complete Version) */
 
 html,
 body {
@@ -9,16 +9,41 @@ body {
   font-family: "Poppins", sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 
+/* --- COMPLETE CSS VARIABLES --- */
 :root {
-  /* CSS variables... */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-headings: #111827;
+  --border-primary: #e5e7eb;
+  --border-input: #d1d5db;
+  --brand-blue: #3b82f6;
+  --brand-purple: #8b5cf6;
+  --brand-yellow: #f59e0b;
+  --grad-from-blue: #3b82f6;
+  --grad-to-purple: #8b5cf6;
+  --brand-blue-rgb: 59, 130, 246;
 }
+
 .dark {
-  /* dark mode variables... */
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-card: #1f2937;
+  --text-primary: #d1d5db;
+  --text-secondary: #9ca3af;
+  --text-headings: #f9fafb;
+  --border-primary: #374151;
+  --border-input: #4b5563;
+  --brand-blue-rgb: 96, 165, 250;
 }
+/* --- END OF CSS VARIABLES --- */
 
 /* Loader Styles (Unchanged) */
 #chat-entry-loader {
@@ -68,7 +93,7 @@ body {
 
 #chatbot-fullscreen-container {
   display: grid;
-  /* Define 3 rows: header (auto height), messages (takes all remaining space), input (auto height) */
+  /* Define 3 rows: header (auto), messages (1fr), input (auto) */
   grid-template-rows: auto 1fr auto;
   width: 100%;
   height: 100vh; /* Fallback */
@@ -80,7 +105,6 @@ body {
 }
 
 #chatbot-header {
-  /* No special positioning needed, it just sits in the first grid row */
   padding: 15px 20px;
   background-color: var(--bg-secondary);
   border-bottom: 1px solid var(--border-primary);
@@ -90,8 +114,7 @@ body {
 }
 
 #chatbot-messages {
-  /* This sits in the middle row (1fr) and expands to fill the space */
-  overflow-y: auto; /* This is the ONLY element that will scroll */
+  overflow-y: auto; /* The ONLY scrolling element */
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -99,7 +122,6 @@ body {
 }
 
 #chatbot-input-area {
-  /* This sits in the last grid row */
   padding: 15px 20px;
   background-color: var(--bg-secondary);
   border-top: 1px solid var(--border-primary);
