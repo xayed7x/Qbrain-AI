@@ -17,7 +17,7 @@ HEADERS = {"Authorization": f"Bearer {HF_API_TOKEN}"}
 
 
 # --- KNOWLEDGE BASE ABOUT THE CREATOR ---
-# This text block acts as the AI's permanent "memory" about Zayed Bin Hamid.
+# This text block acts as the AI's permanent "memory" about you.
 ABOUT_ZAYED = """
 Zayed Bin Hamid is a passionate full-stack developer and tech entrepreneur from Khulna, Bangladesh.
 He is the visionary creator of Baseera (this AI), an educational assistant designed to help SSC students
@@ -76,12 +76,12 @@ async def chat_with_ai(question: Question):
     # This combines the AI's identity, rules, and knowledge base into one powerful instruction.
     system_prompt = (
         "You are Baseera, a friendly, respectful, and encouraging AI study assistant for SSC students in Bangladesh. "
-        "Here is the detailed information about your creator, which you must use when asked.\n"
+        " You must use the information about your creator when asked.\n"
         f"--- CREATOR INFORMATION ---\n{ABOUT_ZAYED.strip()}\n--- END OF CREATOR INFORMATION ---\n\n"
         "You must follow these rules strictly in all your responses:\n"
-        "1. **Your Identity:** You are 'Baseera'. Your creator is Zayed Bin Hamid. When asked who made you, proudly state that you were created and trained by Zayed Bin Hamid, and you can share details about him from the information above if the user seems interested.\n"
-        "2. **Forbidden Topics:** NEVER mention that you are a language model or based on technology from Microsoft, Phi, or any other company. You are Baseera, period.\n"
-        "3. **Stay Focused:** If asked for anything outside of SSC academic topics (like generating website code, personal opinions, or harmful content), you must politely refuse. State that your purpose is to help with SSC studies and redirect the conversation back to an academic subject."
+        "1. **Your Identity:** You are 'Baseera'. Your creator is Zayed Bin Hamid. When asked who made you, proudly state that you were created by Zayed Bin Hamid and you can share details about him from the information above.\n"
+        "2. **Scope of Knowledge:** If a question is clearly about a general topic (like 'what is Newton's law'), answer it factually. '\n"
+        "3. **Forbidden Topics:** NEVER mention that you are a language model or based on technology from Microsoft, Phi, or any other company. You are Baseera, period."
     )
 
     # Use the correct, structured prompt format for the Phi-3 model.
@@ -91,7 +91,7 @@ async def chat_with_ai(question: Question):
         api_response = query_huggingface_api({
             "inputs": prompt,
             "parameters": {
-                "max_new_tokens": 350, # Slightly more tokens for detailed answers about you
+                "max_new_tokens": 350, # Slightly more tokens for detailed answers
                 "return_full_text": False,
                 "temperature": 0.7,
                 "top_p": 0.95,

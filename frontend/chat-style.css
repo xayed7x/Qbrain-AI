@@ -140,12 +140,21 @@ body {
 }
 
 /* The message area takes all available space within the main-content wrapper */
+/* In frontend/chat-style.css */
+
+/* The message area takes all available space within the main-content wrapper */
 #chatbot-messages {
-  height: calc(100vh - 58px); /* A fallback calculation (header is ~58px) */
-  /* The exact height will be set dynamically with JS */
+  height: 100%; /* This is now correct because its parent has padding */
   overflow-y: auto;
-  padding: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
   background-color: var(--bg-primary);
+
+  /* --- THE FIX IS HERE --- */
+  /* This tells the messages how to stack and align */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 /* The input area is now glued to the bottom of the screen */
