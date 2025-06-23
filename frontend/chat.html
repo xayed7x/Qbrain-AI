@@ -46,12 +46,20 @@
 
     <!-- Main Chat UI (Initially hidden by loader or CSS) -->
     <div id="chatbot-fullscreen-container">
+      <!-- NEW AND IMPROVED CODE -->
       <header id="chatbot-header">
-        <h1
-          class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
+        <!-- Wrap the h1 in an anchor tag pointing to the homepage -->
+        <a
+          href="index.html"
+          class="flex items-center no-underline hover:opacity-90 transition-opacity"
         >
-          QBrain AI
-        </h1>
+          <h1
+            class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
+          >
+            QBrain AI
+          </h1>
+        </a>
+
         <button id="close-chatbot-btn" title="Exit Chat (Go to Homepage)">
           <i class="fas fa-times"></i>
         </button>
