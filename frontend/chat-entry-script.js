@@ -1,4 +1,5 @@
-// chat-entry-script.js
+// chat-entry-script.js (Fully Corrected for Mobile Keyboard)
+
 document.addEventListener("DOMContentLoaded", () => {
   const loader = document.getElementById("chat-entry-loader");
   const logo = document.getElementById("loader-logo");
@@ -11,20 +12,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatbotMessagesContainer = document.getElementById("chatbot-messages");
   const closeChatbotButton = document.getElementById("close-chatbot-btn");
 
-  // --- MODIFICATION START ---
-  // Define the API endpoint URL. This makes it easy to change if you deploy your backend.
-  const API_URL = "https://xayed7x-qbrain-ai-backend.hf.space/api/chat";
-  // --- MODIFICATION END ---
+  const API_URL = "https://xayed7x-qbrain-ai-backend.hf.space/api/chat"; // Your live backend URL
 
   if (!loader || !chatContainer) {
     console.error("QBrain AI Chat: Loader or chat container not found.");
-    if (chatContainer) chatContainer.style.opacity = 1; // Failsafe: show chat if loader fails
+    if (chatContainer) chatContainer.style.opacity = 1;
     return;
+  }
+
+  // ---- NEW: Create a reusable function to scroll the chat to the bottom ----
+  function scrollToBottom() {
+    if (chatbotMessagesContainer) {
+      // Use smooth scrolling for a nicer effect
+      chatbotMessagesContainer.scrollTo({
+        top: chatbotMessagesContainer.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }
 
   // Direct entry animation for chat.html (No changes here)
   const tl = gsap.timeline();
   tl.to(loader, { duration: 0.01 })
+    // ... (rest of the GSAP animation code is unchanged)
     .fromTo(
       logo,
       { opacity: 0, scale: 0.8, y: 20, visibility: "hidden" },
@@ -100,7 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
       "-=0.3"
     );
 
-  // Basic Chatbot Send Functionality (No changes here)
   function addMessageToChatUI(text, type) {
     if (!chatbotMessagesContainer) return;
     const messageDiv = document.createElement("div");
@@ -109,43 +118,38 @@ document.addEventListener("DOMContentLoaded", () => {
       type === "user" ? "user-message" : "bot-message"
     );
     const p = document.createElement("p");
-    p.innerHTML = text.replace(/\n/g, "<br>");
+    p.textContent = text;
     messageDiv.appendChild(p);
     chatbotMessagesContainer.appendChild(messageDiv);
-    chatbotMessagesContainer.scrollTop = chatbotMessagesContainer.scrollHeight;
+
+    // A more gentle scroll after adding a new message
+    setTimeout(() => scrollToBottom(), 50);
   }
 
-  // --- MODIFICATION START: Updated send logic ---
   async function handleSendMessage() {
     const userText = chatbotUserInput.value.trim();
     if (!userText) return;
 
-    // 1. Display the user's message immediately
     addMessageToChatUI(userText, "user");
     chatbotUserInput.value = "";
-    chatbotSendButton.disabled = true; // Disable button to prevent multiple sends
+    chatbotSendButton.disabled = true;
 
-    // 2. Display a "thinking" message for better UX
     addMessageToChatUI("QBrain is thinking...", "bot");
 
     try {
-      // 3. Send the user's message to the backend API
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text: userText }), // Match the Pydantic model
+        body: JSON.stringify({ text: userText }),
       });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json(); // Get the response JSON { "answer": "..." }
-
-      // 4. Remove the "thinking" message and add the real AI response
-      // Find the last message (which is our "thinking" message) and remove it.
+      const data = await response.json();
       const lastMessage = chatbotMessagesContainer.lastChild;
       if (lastMessage) {
         chatbotMessagesContainer.removeChild(lastMessage);
@@ -163,13 +167,12 @@ document.addEventListener("DOMContentLoaded", () => {
         "bot"
       );
     } finally {
-      chatbotSendButton.disabled = false; // Re-enable the send button
+      chatbotSendButton.disabled = false;
       chatbotUserInput.focus();
     }
   }
 
   if (chatbotSendButton && chatbotUserInput) {
-    // We replace the original event listener with one that calls our new async function
     chatbotSendButton.addEventListener("click", handleSendMessage);
 
     chatbotUserInput.addEventListener("keypress", (e) => {
@@ -178,8 +181,18 @@ document.addEventListener("DOMContentLoaded", () => {
         handleSendMessage();
       }
     });
+
+    // ---- THIS IS THE FIX FOR THE MOBILE KEYBOARD ----
+    chatbotUserInput.addEventListener("focus", () => {
+      // When the user focuses the input, the keyboard appears and resizes the viewport.
+      // We wait a tiny moment for the resize to complete, then scroll to the bottom
+      // to ensure the latest messages are visible above the keyboard.
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300); // 300ms is a safe delay for most keyboard animations.
+    });
+    // ---- END OF FIX ----
   }
-  // --- MODIFICATION END ---
 
   if (closeChatbotButton) {
     closeChatbotButton.addEventListener("click", () => {
