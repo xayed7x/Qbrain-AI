@@ -1,4 +1,4 @@
-/* chat-style.css */
+/* chat-style.css (Fully Corrected for Mobile Layout) */
 
 /* THIS IS THE SECONDARY FIX */
 html {
@@ -6,11 +6,8 @@ html {
   width: 100%;
 }
 
-/* Import Poppins font (if not relying on Tailwind's default sans-serif) */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 
-/* Re-define CSS Variables for standalone chat.html styling if not using Tailwind for everything */
-/* These are copied from your index.html for consistency */
 :root {
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
@@ -45,35 +42,34 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   margin: 0;
-  display: flex; /* For loader centering */
+  display: flex;
   flex-direction: column;
   min-height: 100vh;
-  overflow: hidden; /* Prevent scrollbars initially */
+  overflow: hidden; /* Prevent body scrollbars */
   transition: background-color 0.3s ease, color 0.3s ease;
-  width: 100%; /* Ensure body also takes full width */
+  width: 100%;
 }
-/* Initial states for loader elements to prevent flash */
+
 #loader-logo,
 #loader-title,
 #loader-subtitle {
   opacity: 0;
-  visibility: hidden; /* Important for preventing layout jumps */
+  visibility: hidden;
 }
 
-/* Chat Entry Loader Styles */
 #chat-entry-loader {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--bg-primary); /* Use theme background */
+  background-color: var(--bg-primary);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 100; /* Above chat UI initially */
-  opacity: 1; /* Starts visible */
+  z-index: 100;
+  opacity: 1;
   transition: opacity 0.5s ease-in-out;
 }
 
@@ -82,9 +78,8 @@ body {
   height: 80px;
   border-radius: 12px;
   margin-bottom: 20px;
-  opacity: 0; /* Initial state */
-  visibility: hidden; /* Initial state */
-  /* Brighter, whiter, softer glow using multiple drop-shadows for a layered effect */
+  opacity: 0;
+  visibility: hidden;
   filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7))
     drop-shadow(0 0 15px rgba(255, 255, 255, 0.5))
     drop-shadow(0 0 30px rgba(255, 255, 255, 0.3));
@@ -95,8 +90,8 @@ body {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 8px;
-  opacity: 0; /* Initial state */
-  visibility: hidden; /* Initial state */
+  opacity: 0;
+  visibility: hidden;
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
     0 0 18px rgba(255, 255, 255, 0.6), 0 0 35px rgba(255, 255, 255, 0.3);
 }
@@ -110,12 +105,17 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh; /* Full viewport height */
-  background-color: var(--bg-primary); /* Use theme's primary background */
+
+  /* --- THE FIX --- */
+  height: 100vh; /* Fallback for older browsers */
+  height: 100dvh; /* Modern, correct unit for mobile browsers */
+  overflow: hidden; /* Crucial: This prevents the container itself from scrolling */
+
+  background-color: var(--bg-primary);
   color: var(--text-primary);
-  opacity: 0; /* Initially hidden, faded in by JS */
+  opacity: 0;
   visibility: hidden;
-  transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s; /* Delay visibility until opaque */
+  transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s;
 }
 
 #chatbot-fullscreen-container.visible {
@@ -129,40 +129,39 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background-color: var(--bg-secondary); /* Slightly different bg for header */
+  background-color: var(--bg-secondary);
   border-bottom: 1px solid var(--border-primary);
-  flex-shrink: 0;
+  flex-shrink: 0; /* Prevents header from shrinking */
 }
 
 #chatbot-header h1 {
   margin: 0;
-  font-size: 1.6em; /* Slightly larger */
+  font-size: 1.6em;
   font-weight: 700;
-  /* Gradient applied via Tailwind classes in HTML */
 }
 
 #close-chatbot-btn {
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 1.5em; /* Adjusted size */
+  font-size: 1.5em;
   cursor: pointer;
   padding: 5px;
   line-height: 1;
   transition: color 0.2s ease;
 }
 #close-chatbot-btn:hover {
-  color: var(--text-primary); /* Brighter on hover */
+  color: var(--text-primary);
 }
 
 #chatbot-messages {
-  flex-grow: 1; /* This tells the message area to take all available space */
-  overflow-y: auto; /* This makes ONLY the message area scrollable */
+  flex-grow: 1; /* Take up all available vertical space */
+  overflow-y: auto; /* Make ONLY this area scrollable */
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background-color: var(--bg-primary); /* Main chat area background */
+  background-color: var(--bg-primary);
 }
 
 /* BONUS UI POLISH: Add a modern, thin scrollbar */
@@ -182,50 +181,52 @@ body {
 
 .message {
   padding: 10px 15px;
-  border-radius: 18px; /* Consistent rounded corners */
-  max-width: 75%; /* Slightly wider max width */
+  border-radius: 18px;
+  max-width: 75%;
   line-height: 1.5;
   word-wrap: break-word;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow on messages */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 .dark .message {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .user-message {
-  background-color: var(--brand-blue); /* Your existing user message color */
+  background-color: var(--brand-blue);
   color: white;
   align-self: flex-end;
-  border-bottom-right-radius: 5px; /* As per your original chat popup */
+  border-bottom-right-radius: 5px;
 }
 
 .bot-message {
-  background-color: var(--bg-card); /* Your existing bot message color */
+  background-color: var(--bg-card);
   color: var(--text-primary);
   align-self: flex-start;
-  border-bottom-left-radius: 5px; /* As per your original chat popup */
+  border-bottom-left-radius: 5px;
 }
 
+/* BONUS FIX: Ensure proper formatting for AI responses with newlines */
 .bot-message p,
 .user-message p {
   margin: 0;
+  white-space: pre-wrap;
 }
 
 #chatbot-input-area {
   display: flex;
-  align-items: center; /* Vertically align items */
+  align-items: center;
   padding: 15px 20px;
-  background-color: var(--bg-secondary); /* Same as header */
+  background-color: var(--bg-secondary);
   border-top: 1px solid var(--border-primary);
-  flex-shrink: 0;
+  flex-shrink: 0; /* Prevents input area from shrinking */
 }
 
 #chatbot-user-input {
   flex-grow: 1;
-  padding: 12px 18px; /* Slightly more padding */
+  padding: 12px 18px;
   border: 1px solid var(--border-input);
-  border-radius: 25px; /* More rounded */
-  background-color: var(--bg-primary); /* Input field bg */
+  border-radius: 25px;
+  background-color: var(--bg-primary);
   color: var(--text-primary);
   font-size: 1em;
   margin-right: 12px;
@@ -234,33 +235,33 @@ body {
 
 #chatbot-user-input:focus {
   outline: none;
-  border-color: var(--brand-blue); /* Use brand blue for focus */
-  box-shadow: 0 0 0 3px rgba(var(--brand-blue-rgb), 0.3); /* Focus ring with brand blue */
+  border-color: var(--brand-blue);
+  box-shadow: 0 0 0 3px rgba(var(--brand-blue-rgb), 0.3);
 }
 
 #chatbot-send-btn {
-  padding: 12px; /* Square button, adjust padding */
-  background-color: var(--brand-blue); /* Your brand blue */
+  padding: 12px;
+  background-color: var(--brand-blue);
   color: white;
   border: none;
-  border-radius: 50%; /* Circular send button */
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 1.1em; /* Icon size */
+  font-size: 1.1em;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s ease, transform 0.1s ease;
-  aspect-ratio: 1/1; /* Keep it square/circle */
+  aspect-ratio: 1/1;
 }
 
 #chatbot-send-btn:hover {
-  background-color: var(--brand-purple); /* Or a darker shade of blue */
+  background-color: var(--brand-purple);
 }
 #chatbot-send-btn:active {
   transform: scale(0.95);
 }
 
-/* For gradient text utility (if not using Tailwind classes in chat.html) */
+/* Gradient text utilities */
 .bg-clip-text {
   -webkit-background-clip: text;
   background-clip: text;
