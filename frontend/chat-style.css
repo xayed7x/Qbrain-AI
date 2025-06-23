@@ -156,13 +156,28 @@ body {
 }
 
 #chatbot-messages {
-  flex-grow: 1;
-  overflow-y: auto;
+  flex-grow: 1; /* This tells the message area to take all available space */
+  overflow-y: auto; /* This makes ONLY the message area scrollable */
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   background-color: var(--bg-primary); /* Main chat area background */
+}
+
+/* BONUS UI POLISH: Add a modern, thin scrollbar */
+#chatbot-messages::-webkit-scrollbar {
+  width: 6px;
+}
+#chatbot-messages::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+#chatbot-messages::-webkit-scrollbar-thumb {
+  background-color: var(--border-input);
+  border-radius: 6px;
+}
+#chatbot-messages::-webkit-scrollbar-thumb:hover {
+  background-color: var(--brand-blue);
 }
 
 .message {

@@ -16,32 +16,30 @@ API_URL = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
 HEADERS = {"Authorization": f"Bearer {HF_API_TOKEN}"}
 
 
-# --- KNOWLEDGE BASE ABOUT THE CREATOR (with Social Media Links) ---
-# This text block acts as the AI's "memory" about Zayed Bin Hamid.
+# --- KNOWLEDGE BASE ABOUT THE CREATOR ---
+# This text block acts as the AI's permanent "memory" about Zayed Bin Hamid.
 ABOUT_ZAYED = """
 Zayed Bin Hamid is a passionate full-stack developer and tech entrepreneur from Khulna, Bangladesh.
-He is the visionary creator behind QBrain AI — an educational AI assistant designed to help SSC students
+He is the visionary creator of Baseera (this AI), an educational assistant designed to help SSC students
 across Bangladesh access personalized, high-quality academic support for free.
 
 Key facts about Zayed Bin Hamid:
-- 🎯 Mission-Driven: Zayed is focused on solving real-world problems through technology and making education more accessible.
-- 💻 Skilled Developer: He has expertise in Python, JavaScript, FastAPI, Hugging Face, and modern deployment platforms like Vercel.
-- 🌍 Future-Oriented: His goal is to expand QBrain AI to cover all NCTB textbooks and subjects, becoming the #1 AI study assistant for Bangladeshi students.
-- 🚀 Self-Taught & Determined: Zayed is a hardworking learner who built QBrain AI from scratch, driven by passion and a belief in the power of tech to uplift his community.
-- 🧠 AI Ethos: He envisions a future where AI supports — not replaces — learners, and tools like QBrain reflect Islamic values and positive impact.
+- Mission: Zayed is focused on solving real-world problems through technology, making education more accessible.
+- Skills: He has expertise in Python, JavaScript, FastAPI, Hugging Face, and deploying on platforms like Vercel.
+- Vision: His goal is to expand Baseera to cover all NCTB textbooks, becoming the #1 AI study assistant for Bangladeshi students.
+- Drive: Zayed is a hardworking, self-taught learner who built this application from scratch out of a passion for technology and community.
 
 You can connect with Zayed or follow his work here:
 - GitHub: https://github.com/xayed7x
-- LinkedIn: linkedin.com/in/zayed-web-developer
-- YouTube: https://youtube.com/@zayedofficialbd?si=IbhhzeLwwOO6yYUm
+- LinkedIn: https://linkedin.com/in/zayed-web-developer
+- YouTube: https://youtube.com/@zayedofficialbd
 - Facebook: https://www.facebook.com/share/15Sp8vDAWL/
-- X: x.com/Xayed007?t=6lu-_OrAbQRrd-U-xy8oPw&s=09
-- Instagram: instagram.com/xayed007?igsh=ZDRnNW1zaWx1Y2x6
+- Instagram: https://instagram.com/xayed007
 """
 
 
 # --- FastAPI App Setup ---
-app = FastAPI(title="QBrain AI Backend")
+app = FastAPI(title="Baseera AI Backend")
 
 app.add_middleware(
     CORSMiddleware,
@@ -64,30 +62,26 @@ class Response(BaseModel):
 @app.get("/")
 def read_root():
     """ A simple root endpoint to check if the server is live. """
-    return {"message": f"QBrain AI Backend is running. Using model: {MODEL_ID}"}
-
-
-@app.get("/whoami", summary="Get Creator Information")
-def whoami():
-    """Returns a JSON object with information about the creator, Zayed Bin Hamid."""
-    return {"creator": "Zayed Bin Hamid", "bio": ABOUT_ZAYED.strip()}
+    return {"message": f"Baseera AI Backend is running. Using model: {MODEL_ID}"}
 
 
 @app.post("/api/chat", response_model=Response)
 async def chat_with_ai(question: Question):
     """
-    Receives a question, formats it with a system prompt including the creator's bio,
-    queries the AI model, and returns the answer.
+    Receives a question, applies the 'Baseera' persona and creator knowledge,
+    and queries the AI model.
     """
-    # Define the AI's persona and knowledge base in a system prompt.
+    
+    # --- The Persona System Prompt ---
+    # This combines the AI's identity, rules, and knowledge base into one powerful instruction.
     system_prompt = (
-        "You are QBrain AI, a friendly and helpful AI study assistant for students in Bangladesh.\n"
-        "Here is information about your creator:\n"
-        f"--- ABOUT THE CREATOR ---\n{ABOUT_ZAYED.strip()}\n--- END OF INFO ---\n\n"
-        "When a user asks about who made you, your creator, your developer, or about Zayed Bin Hamid, "
-        "use the information provided above to give a comprehensive and respectful answer. "
-        "If they ask for more details or how to connect with him, offer the social media links. "
-        "Do not mention Microsoft or the base model name (Phi-3)."
+        "You are Baseera, a friendly, respectful, and encouraging AI study assistant for SSC students in Bangladesh. "
+        "Here is the detailed information about your creator, which you must use when asked.\n"
+        f"--- CREATOR INFORMATION ---\n{ABOUT_ZAYED.strip()}\n--- END OF CREATOR INFORMATION ---\n\n"
+        "You must follow these rules strictly in all your responses:\n"
+        "1. **Your Identity:** You are 'Baseera'. Your creator is Zayed Bin Hamid. When asked who made you, proudly state that you were created and trained by Zayed Bin Hamid, and you can share details about him from the information above if the user seems interested.\n"
+        "2. **Forbidden Topics:** NEVER mention that you are a language model or based on technology from Microsoft, Phi, or any other company. You are Baseera, period.\n"
+        "3. **Stay Focused:** If asked for anything outside of SSC academic topics (like generating website code, personal opinions, or harmful content), you must politely refuse. State that your purpose is to help with SSC studies and redirect the conversation back to an academic subject."
     )
 
     # Use the correct, structured prompt format for the Phi-3 model.
@@ -97,17 +91,18 @@ async def chat_with_ai(question: Question):
         api_response = query_huggingface_api({
             "inputs": prompt,
             "parameters": {
-                "max_new_tokens": 250,
+                "max_new_tokens": 350, # Slightly more tokens for detailed answers about you
                 "return_full_text": False,
                 "temperature": 0.7,
+                "top_p": 0.95,
             }
         })
-        generated_text = api_response[0].get("generated_text", "Sorry, I couldn't generate a response.").strip()
+        generated_text = api_response[0].get("generated_text", "I'm sorry, I'm having a little trouble thinking right now. Please try asking again.").strip()
         return {"answer": generated_text}
 
     except requests.exceptions.RequestException as e:
         print(f"Error calling Hugging Face API: {e}")
-        return {"answer": "Sorry, I'm having trouble connecting to the AI brain. Please try again later."}
+        return {"answer": "Sorry, I'm having trouble connecting to my knowledge base. Please try again later."}
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         return {"answer": "An unexpected error occurred. Please contact the administrator."}
