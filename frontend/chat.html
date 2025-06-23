@@ -33,50 +33,49 @@
   </head>
   <!-- In frontend/chat.html -->
 
+  <!-- In frontend/chat.html -->
   <body class="antialiased">
-    <!-- Chat Entry Loader (No changes here) -->
+    <!-- Loader (Unchanged) -->
     <div id="chat-entry-loader">
       <img src="logo.jpg" alt="QBrain Logo" id="loader-logo" />
       <h1
         id="loader-title"
         class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
       >
-        QBrain AI
+        Baseera
       </h1>
       <p id="loader-subtitle">Preparing your session...</p>
     </div>
 
-    <!-- Main Chat UI (Initially hidden) -->
+    <!-- Main Chat UI (Now uses a simple, direct structure) -->
     <div id="chatbot-fullscreen-container">
-      <!-- ***** HTML CHANGE IS HERE ***** -->
-      <!-- We wrap the header and messages in a "main-content" div -->
-      <div id="chatbot-main-content">
-        <header id="chatbot-header">
-          <h1
-            class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
-          >
-            QBrain AI
-          </h1>
-          <button id="close-chatbot-btn" title="Exit Chat (Go to Homepage)">
-            <i class="fas fa-times"></i>
-          </button>
-        </header>
-        <div id="chatbot-messages">
-          <!-- Example Message -->
-          <div class="message bot-message">
-            <p>Assalamu Alaikum! I am Baseera, your personal AI study assistant. How can I help?</p>
-          </div>
-          <!-- Messages will be appended here -->
-        </div>
-      </div>
-      <!-- ***** END OF HTML CHANGE ***** -->
+      <header id="chatbot-header">
+        <h1
+          class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
+        >
+          Baseera
+        </h1>
+        <button id="close-chatbot-btn" title="Exit Chat (Go to Homepage)">
+          <i class="fas fa-times"></i>
+        </button>
+      </header>
 
-      <!-- The input area is now a direct child of the main container -->
+      <div id="chatbot-messages">
+        <!-- Example Message -->
+        <div class="message bot-message">
+          <p>
+            Assalamu Alaikum! I am Baseera, your personal AI study assistant.
+            How can I help you?
+          </p>
+        </div>
+        <!-- Messages will be appended here -->
+      </div>
+
       <div id="chatbot-input-area">
         <input
           type="text"
           id="chatbot-user-input"
-          placeholder="Ask QBrain anything..."
+          placeholder="Ask Baseera anything..."
         />
         <button id="chatbot-send-btn" title="Send Message">
           <i class="fas fa-paper-plane"></i>

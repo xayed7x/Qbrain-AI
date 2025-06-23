@@ -1,4 +1,4 @@
-/* chat-style.css (Definitive Layout Fix) */
+/* chat-style.css (The Definitive CSS Grid Layout) */
 
 html,
 body {
@@ -7,39 +7,17 @@ body {
   height: 100%;
   margin: 0;
   font-family: "Poppins", sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-card: #ffffff;
-  --text-primary: #1f2937;
-  --text-secondary: #4b5563;
-  --border-input: #d1d5db;
-  --brand-blue: #3b82f6;
-  --brand-purple: #8b5cf6;
-  --grad-from-blue: #3b82f6;
-  --grad-to-purple: #8b5cf6;
-  --brand-blue-rgb: 59, 130, 246;
+  /* CSS variables... */
 }
-
 .dark {
-  --bg-primary: #111827;
-  --bg-secondary: #1f2937;
-  --bg-card: #1f2937;
-  --text-primary: #d1d5db;
-  --text-secondary: #9ca3af;
-  --border-primary: #374151;
-  --border-input: #4b5563;
-  --brand-blue-rgb: 96, 165, 250;
-}
-
-body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  /* dark mode variables... */
 }
 
 /* Loader Styles (Unchanged) */
@@ -86,40 +64,51 @@ body {
   color: var(--text-secondary);
 }
 
-/* --- THE NEW LAYOUT LOGIC --- */
+/* --- THE NEW CSS GRID LAYOUT --- */
 
-/* Main container is now a simple overlay */
 #chatbot-fullscreen-container {
-  position: fixed;
-  top: 0;
-  left: 0;
+  display: grid;
+  /* Define 3 rows: header (auto height), messages (takes all remaining space), input (auto height) */
+  grid-template-rows: auto 1fr auto;
   width: 100%;
-  height: 100vh; /* Use 100vh here, dvh will be handled by the inner container */
+  height: 100vh; /* Fallback */
+  height: 100dvh; /* Modern, correct unit for mobile */
   background-color: var(--bg-primary);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.5s ease-in-out;
 }
 
-/* This is the new wrapper for the scrollable content */
-#chatbot-main-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  /* This creates space at the bottom for the fixed input area */
-  /* We will set its height dynamically with JS */
-}
-
-/* The header remains as is, inside the main content flow */
 #chatbot-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  /* No special positioning needed, it just sits in the first grid row */
   padding: 15px 20px;
   background-color: var(--bg-secondary);
   border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+#chatbot-messages {
+  /* This sits in the middle row (1fr) and expands to fill the space */
+  overflow-y: auto; /* This is the ONLY element that will scroll */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#chatbot-input-area {
+  /* This sits in the last grid row */
+  padding: 15px 20px;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-primary);
+  display: flex;
+  align-items: center;
+}
+/* ---- END OF CSS GRID LAYOUT ---- */
+
+/* Unchanged Styles Below */
 #chatbot-header h1 {
   margin: 0;
   font-size: 1.6em;
@@ -138,41 +127,6 @@ body {
 #close-chatbot-btn:hover {
   color: var(--text-primary);
 }
-
-/* The message area takes all available space within the main-content wrapper */
-/* In frontend/chat-style.css */
-
-/* The message area takes all available space within the main-content wrapper */
-#chatbot-messages {
-  height: 100%; /* This is now correct because its parent has padding */
-  overflow-y: auto;
-  padding-left: 20px;
-  padding-right: 20px;
-  background-color: var(--bg-primary);
-
-  /* --- THE FIX IS HERE --- */
-  /* This tells the messages how to stack and align */
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* The input area is now glued to the bottom of the screen */
-#chatbot-input-area {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box; /* Ensures padding is included in the width */
-  display: flex;
-  align-items: center;
-  padding: 15px 20px;
-  background-color: var(--bg-secondary);
-  border-top: 1px solid var(--border-primary);
-}
-/* ---- END OF NEW LAYOUT LOGIC ---- */
-
-/* Scrollbar and Message Styles (Unchanged) */
 #chatbot-messages::-webkit-scrollbar {
   width: 6px;
 }
@@ -183,19 +137,12 @@ body {
   background-color: var(--border-input);
   border-radius: 6px;
 }
-#chatbot-messages::-webkit-scrollbar-thumb:hover {
-  background-color: var(--brand-blue);
-}
 .message {
   padding: 10px 15px;
   border-radius: 18px;
   max-width: 75%;
   line-height: 1.5;
   word-wrap: break-word;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-.dark .message {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 .user-message {
   background-color: var(--brand-blue);
@@ -214,8 +161,6 @@ body {
   margin: 0;
   white-space: pre-wrap;
 }
-
-/* Input Styles (Unchanged) */
 #chatbot-user-input {
   flex-grow: 1;
   padding: 12px 18px;
@@ -246,14 +191,6 @@ body {
   transition: background-color 0.2s ease, transform 0.1s ease;
   aspect-ratio: 1/1;
 }
-#chatbot-send-btn:hover {
-  background-color: var(--brand-purple);
-}
-#chatbot-send-btn:active {
-  transform: scale(0.95);
-}
-
-/* Gradient text utilities */
 .bg-clip-text {
   -webkit-background-clip: text;
   background-clip: text;
