@@ -1,42 +1,84 @@
-// chat-entry-script.js (Fully Corrected for Mobile Keyboard)
+// chat-entry-script.js (Definitive Layout Fix)
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Element selectors...
   const loader = document.getElementById("chat-entry-loader");
-  const logo = document.getElementById("loader-logo");
-  const title = document.getElementById("loader-title");
-  const subtitle = document.getElementById("loader-subtitle");
   const chatContainer = document.getElementById("chatbot-fullscreen-container");
-
+  const chatbotHeader = document.getElementById("chatbot-header");
+  const chatbotMessagesContainer = document.getElementById("chatbot-messages");
+  const chatbotInputArea = document.getElementById("chatbot-input-area");
+  const chatbotMainContent = document.getElementById("chatbot-main-content");
   const chatbotUserInput = document.getElementById("chatbot-user-input");
   const chatbotSendButton = document.getElementById("chatbot-send-btn");
-  const chatbotMessagesContainer = document.getElementById("chatbot-messages");
   const closeChatbotButton = document.getElementById("close-chatbot-btn");
 
-  const API_URL = "https://xayed7x-qbrain-ai-backend.hf.space/api/chat"; // Your live backend URL
+  const API_URL = "https://xayed7x-qbrain-ai-backend.hf.space/api/chat";
 
-  if (!loader || !chatContainer) {
-    console.error("QBrain AI Chat: Loader or chat container not found.");
-    if (chatContainer) chatContainer.style.opacity = 1;
-    return;
+  // ---- NEW: DYNAMIC LAYOUT ADJUSTMENT FUNCTION ----
+  function adjustLayout() {
+    if (
+      !chatbotHeader ||
+      !chatbotInputArea ||
+      !chatbotMessagesContainer ||
+      !chatbotMainContent
+    )
+      return;
+
+    // Get the height of the fixed header and input areas
+    const headerHeight = chatbotHeader.offsetHeight;
+    const inputAreaHeight = chatbotInputArea.offsetHeight;
+
+    // Set the height of the main content wrapper to fill the screen
+    chatbotMainContent.style.height = "100vh"; // Use 100vh for the wrapper
+
+    // Set padding at the top and bottom of the message container to avoid the fixed elements
+    chatbotMessagesContainer.style.paddingTop = `${headerHeight + 20}px`; // 20px for extra space
+    chatbotMessagesContainer.style.paddingBottom = `${inputAreaHeight + 20}px`;
+
+    // Make the header and input area truly fixed by taking them out of the main wrapper in the CSS
+    // The main-content div itself doesn't need height adjustment, but its content (messages) does
   }
 
-  // ---- NEW: Create a reusable function to scroll the chat to the bottom ----
+  // ---- NEW: Alternative Layout Function for perfect scroll ----
+  function adjustChatView() {
+    if (!chatbotHeader || !chatbotInputArea || !chatbotMessagesContainer)
+      return;
+
+    const headerHeight = chatbotHeader.getBoundingClientRect().height;
+    const inputAreaHeight = chatbotInputArea.getBoundingClientRect().height;
+    const totalScreenHeight = window.innerHeight;
+
+    // Calculate the available height for the messages area
+    const messagesHeight = totalScreenHeight - headerHeight - inputAreaHeight;
+
+    // We set padding on the *main content wrapper* and let messages scroll within it
+    if (chatbotMainContent) {
+      chatbotMainContent.style.paddingTop = `${headerHeight}px`;
+      chatbotMainContent.style.paddingBottom = `${inputAreaHeight}px`;
+      chatbotMainContent.style.height = "100vh";
+      chatbotMainContent.style.boxSizing = "border-box";
+    }
+
+    // The messages div itself will now scroll correctly within this padded container
+    chatbotMessagesContainer.style.height = "100%";
+  }
+
+  // We need to run this on load and on resize
+  window.addEventListener("resize", adjustChatView);
+
   function scrollToBottom() {
     if (chatbotMessagesContainer) {
-      // Use smooth scrolling for a nicer effect
-      chatbotMessagesContainer.scrollTo({
-        top: chatbotMessagesContainer.scrollHeight,
-        behavior: "smooth",
-      });
+      chatbotMessagesContainer.scrollTop =
+        chatbotMessagesContainer.scrollHeight;
     }
   }
 
-  // Direct entry animation for chat.html (No changes here)
+  // GSAP animation... (no changes needed here, just ensure it targets the right elements)
   const tl = gsap.timeline();
+  // ... (rest of GSAP code remains the same)
   tl.to(loader, { duration: 0.01 })
-    // ... (rest of the GSAP animation code is unchanged)
     .fromTo(
-      logo,
+      document.getElementById("loader-logo"),
       { opacity: 0, scale: 0.8, y: 20, visibility: "hidden" },
       {
         opacity: 1,
@@ -48,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     )
     .fromTo(
-      title,
+      document.getElementById("loader-title"),
       { opacity: 0, y: 10, visibility: "hidden" },
       {
         opacity: 1,
@@ -60,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "-=0.4"
     )
     .fromTo(
-      subtitle,
+      document.getElementById("loader-subtitle"),
       { opacity: 0, y: 10, visibility: "hidden" },
       {
         opacity: 1,
@@ -72,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "-=0.3"
     )
     .to(
-      logo,
+      document.getElementById("loader-logo"),
       {
         scale: 1.05,
         filter:
@@ -104,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
         duration: 0.5,
         ease: "power1.out",
         onComplete: () => {
+          adjustChatView(); // Adjust layout right when chat becomes visible
           if (chatbotUserInput) chatbotUserInput.focus();
         },
       },
@@ -121,47 +164,32 @@ document.addEventListener("DOMContentLoaded", () => {
     p.textContent = text;
     messageDiv.appendChild(p);
     chatbotMessagesContainer.appendChild(messageDiv);
-
-    // A more gentle scroll after adding a new message
     setTimeout(() => scrollToBottom(), 50);
   }
 
   async function handleSendMessage() {
     const userText = chatbotUserInput.value.trim();
     if (!userText) return;
-
     addMessageToChatUI(userText, "user");
     chatbotUserInput.value = "";
     chatbotSendButton.disabled = true;
-
     addMessageToChatUI("QBrain is thinking...", "bot");
-
     try {
       const response = await fetch(API_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: userText }),
       });
-
-      if (!response.ok) {
+      if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
       const data = await response.json();
       const lastMessage = chatbotMessagesContainer.lastChild;
-      if (lastMessage) {
-        chatbotMessagesContainer.removeChild(lastMessage);
-      }
-
+      if (lastMessage) chatbotMessagesContainer.removeChild(lastMessage);
       addMessageToChatUI(data.answer, "bot");
     } catch (error) {
       console.error("Error fetching from AI backend:", error);
       const lastMessage = chatbotMessagesContainer.lastChild;
-      if (lastMessage) {
-        chatbotMessagesContainer.removeChild(lastMessage);
-      }
+      if (lastMessage) chatbotMessagesContainer.removeChild(lastMessage);
       addMessageToChatUI(
         "Sorry, I couldn't connect to the AI. Please try again later.",
         "bot"
@@ -174,24 +202,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (chatbotSendButton && chatbotUserInput) {
     chatbotSendButton.addEventListener("click", handleSendMessage);
-
     chatbotUserInput.addEventListener("keypress", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         handleSendMessage();
       }
     });
-
-    // ---- THIS IS THE FIX FOR THE MOBILE KEYBOARD ----
     chatbotUserInput.addEventListener("focus", () => {
-      // When the user focuses the input, the keyboard appears and resizes the viewport.
-      // We wait a tiny moment for the resize to complete, then scroll to the bottom
-      // to ensure the latest messages are visible above the keyboard.
-      setTimeout(() => {
-        scrollToBottom();
-      }, 300); // 300ms is a safe delay for most keyboard animations.
+      setTimeout(() => scrollToBottom(), 300);
     });
-    // ---- END OF FIX ----
   }
 
   if (closeChatbotButton) {

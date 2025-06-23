@@ -31,8 +31,10 @@
       };
     </script>
   </head>
+  <!-- In frontend/chat.html -->
+
   <body class="antialiased">
-    <!-- Chat Entry Loader (for direct access to chat.html) -->
+    <!-- Chat Entry Loader (No changes here) -->
     <div id="chat-entry-loader">
       <img src="logo.jpg" alt="QBrain Logo" id="loader-logo" />
       <h1
@@ -44,33 +46,32 @@
       <p id="loader-subtitle">Preparing your session...</p>
     </div>
 
-    <!-- Main Chat UI (Initially hidden by loader or CSS) -->
+    <!-- Main Chat UI (Initially hidden) -->
     <div id="chatbot-fullscreen-container">
-      <!-- NEW AND IMPROVED CODE -->
-      <header id="chatbot-header">
-        <!-- Wrap the h1 in an anchor tag pointing to the homepage -->
-        <a
-          href="index.html"
-          class="flex items-center no-underline hover:opacity-90 transition-opacity"
-        >
+      <!-- ***** HTML CHANGE IS HERE ***** -->
+      <!-- We wrap the header and messages in a "main-content" div -->
+      <div id="chatbot-main-content">
+        <header id="chatbot-header">
           <h1
             class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--grad-from-blue)] to-[var(--grad-to-purple)]"
           >
             QBrain AI
           </h1>
-        </a>
-
-        <button id="close-chatbot-btn" title="Exit Chat (Go to Homepage)">
-          <i class="fas fa-times"></i>
-        </button>
-      </header>
-      <div id="chatbot-messages">
-        <!-- Example Message -->
-        <div class="message bot-message">
-          <p>Hello! How can I help you with your SSC preparation today?</p>
+          <button id="close-chatbot-btn" title="Exit Chat (Go to Homepage)">
+            <i class="fas fa-times"></i>
+          </button>
+        </header>
+        <div id="chatbot-messages">
+          <!-- Example Message -->
+          <div class="message bot-message">
+            <p>Hello! How can I help you with your SSC preparation today?</p>
+          </div>
+          <!-- Messages will be appended here -->
         </div>
-        <!-- More messages will be appended here by JS -->
       </div>
+      <!-- ***** END OF HTML CHANGE ***** -->
+
+      <!-- The input area is now a direct child of the main container -->
       <div id="chatbot-input-area">
         <input
           type="text"
