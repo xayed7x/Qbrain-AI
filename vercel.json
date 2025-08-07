@@ -2,26 +2,42 @@
   "version": 2,
   "builds": [
     {
-      "src": "/backend/app.py",
+      "src": "backend/app.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "frontend/index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "public/sitemap.xml",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "public/robots.txt",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/frontend/(.*)",
-      "dest": "/frontend/$1"
+      "src": "/sitemap.xml",
+      "dest": "/public/sitemap.xml"
     },
     {
       "src": "/robots.txt",
       "dest": "/public/robots.txt"
     },
     {
-      "src": "/sitemap.xml",
-      "dest": "/public/sitemap.xml"
+      "src": "/static/(.*)",
+      "dest": "/frontend/static/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/backend/app.py"
+      "src": "/",
+      "dest": "/frontend/index.html"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/app.py"
     }
   ]
 }
